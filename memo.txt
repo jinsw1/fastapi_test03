@@ -1,0 +1,13 @@
+#가상환경 만들기
+python -m venv venv
+
+#가상환경 활성화
+.\venv\Scripts\activate
+
+#필요한 패키지 설치
+pip install fastapi uvicorn sqlalchemy psycopg2-binary python-jose jinja2 python-multipart
+
+# app 시작하기
+uvicorn main:app --reload
+
+
