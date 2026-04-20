@@ -17,6 +17,7 @@
 					<th>제목</th>
 					<th>내용</th>
 					<th>작성일</th>
+					<th>삭제</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -27,12 +28,18 @@
 					<td>{{ post.title }}</td>
 					<td>{{ post.content }}</td>
 					<td>{{ post.created_at }}</td>
+					<th>
+				        <form action="/post/delete" method="post">
+				            <input type="hidden" name="num" value="{{ post.num }}">
+				            <button type="submit">삭제</button>
+				        </form>
+					</th>
 				</tr>
 				{% endfor %}
 			</tbody>
 		</table>
 		<br>
 		<a href="/">홈으로 돌아가기</a>
-	</div>	
+	</div>
 </body>
 </html>

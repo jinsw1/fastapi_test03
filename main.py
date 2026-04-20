@@ -72,3 +72,16 @@ def postNew(writer: str=Form(...), title: str=Form(...), content: str=Form(...),
 
 	# 정보 저장 후 특정 경로로 리다이렉트
 	return RedirectResponse("/post", status_code=302)
+
+@app.post("/post/delete")
+def delete_post(num: int = Form(...), db: Session = Depends(get_db)):
+
+    query = text("""
+        DELETE FROM post
+        WHERE num = :num
+    """)
+
+    db.execute(query, {"num": num})
+    db.commit()
+
+    return RedirectResponse("/post", status_code=302)
