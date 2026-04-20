@@ -10,4 +10,10 @@ pip install fastapi uvicorn sqlalchemy psycopg2-binary python-jose jinja2 python
 # app 시작하기
 uvicorn main:app --reload
 
+# git 변경사항 취소
+git restore .
+
+# untracked file 도 제거 하기
+git clean -fd
+
 
