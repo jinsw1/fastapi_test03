@@ -72,7 +72,7 @@ def postNew(request: Request, writer: str=Form(...), title: str=Form(...), conte
 
 	# 정보 저장 후 특정 경로로 리다이렉트
 	#return RedirectResponse("/post", status_code=302)
-	return template.TemplateResponse(
+	return templates.TemplateResponse(
 		request=request,
 		name="post/alert.html",
 		context= {
@@ -100,3 +100,45 @@ def delete_post(num: int = Form(...), db: Session = Depends(get_db)):
 #     db.execute(query, {"num":num})
 #     db.commit()
 #     return RedirectResponse("/post", status_code=302)
+
+@app.get("/post/edit/{num}")
+def editForm(request:Request, num:int, db:Session=Depends(get_db)):
+	# 수정할 글 정보 읽어오기 위한 query
+    query = text("""
+        SELECT * FROM post
+        WHERE num = :num
+    """)
+	# PK를 이용해서 select 하는 것이기 때문에 row 는 1개다 따라서 .fechone() 함수를 호출한다.
+	#row = db.execute(query, {"num":num}).fetchone()
+    row = db.execute(query, {"num":num}).mappings().fetchone()
+	
+    return templates.TemplateResponse(
+		request=request,
+		name="post/edit.html",
+		context={
+			"post":row
+		}		
+	)
+
+#글 수정 반영
+@app.post("/post/edit/{num}")
+def edit(request:Request, num:int, title: str=Form(...), content: str=Form(...), db: Session=Depends(get_db)):
+	# 수정할 글 정보 읽어오기 위한 query
+	query = text("""
+		UPDATE post SET
+			title= :title,
+			content= :content				 
+		WHERE num = :num
+	""")
+
+	db.execute(query, {"num":num, "title":title, "content":content})
+	db.commit()
+
+	return templates.TemplateResponse(
+		request=request,
+		name="post/alert.html",
+		context= {
+			"msg":"글 정보를 추가 했습니다!!",
+			"url": "/post"
+		}
+	)
