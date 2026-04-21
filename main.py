@@ -100,3 +100,23 @@ def delete_post(num: int = Form(...), db: Session = Depends(get_db)):
 #     db.execute(query, {"num":num})
 #     db.commit()
 #     return RedirectResponse("/post", status_code=302)
+
+@app.get("/post/edit/{num}")
+def edit(request:Request, num:int, db:Session=Depends(get_db)):
+	# 수정할 글 정보 읽어오기 위한 query
+    query = text("""
+        SELECT * FROM post
+        WHERE num = :num
+    """)
+	# PK를 이용해서 select 하는 것이기 때문에 row 는 1개다 따라서 .fechone() 함수를 호출한다.
+	#row = db.execute(query, {"num":num}).fetchone()
+    row = db.execute(query, {"num":num}).mappings().fetchone()
+	
+    return templates.TemplateResponse(
+		request=request,
+		name="post/edit.html",
+		context={
+			"post":row
+		}		
+	)
+
